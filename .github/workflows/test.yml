@@ -1,35 +1,40 @@
-name: Cypress Tests
+# Name of workflow
+name: Cypress Test
 
+# Trigger workflow on all pull requests
 on:
   pull_request:
     branches:
       - develop
       - main
 
+# Jobs to carry out
 jobs:
   test:
+    # Operating system to run job on
     runs-on: ubuntu-latest
 
+    # Steps in job
     steps:
+      # Get code from repo
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v1
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v1
         with:
-          node-version: '18'  # Use Node.js 18 if your application requires it
+          node-version: 22.x
 
-      - name: Install dependencies
+      # Install dependencies
+      - name: 🧰 Install Deps
         run: npm install
+        
+  
 
-      - name: Build the app
+      # Run build
+      - name: Run Build
         run: npm run build
 
-      - name: Start server in the background
-        run: npm start &
-      
-      - name: Wait for server to be ready
-        run: npx wait-on http://localhost:3001 --timeout 60000  # Increase the timeout to 60 seconds
-
-      - name: Run Cypress tests
-        run: npx cypress run
+      # Run tests
+      - name: Run Tests
+        run: npm run test
