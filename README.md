@@ -1,55 +1,79 @@
-
+GitHub Actions CI/CD Setup
 The GitHub Actions CI/CD setup automates the testing and deployment processes for a full-stack application. It triggers Cypress tests on Pull Requests to the develop branch to ensure code quality before merging. Upon merging to the main branch, it automatically deploys the application to Render, keeping the production environment up-to-date with the latest changes.
 
-# Key Features
-Automated Testing with Cypress: Cypress tests are run on every Pull Request (PR) to the develop branch to ensure code quality and prevent breaking changes.
-Continuous Deployment: Upon merging to the main branch, the application is automatically deployed to Render, keeping the production environment up-to-date with the latest changes.
-Workflow Overview
-PR to develop: When a PR is created or updated targeting the develop branch, Cypress tests are automatically triggered to check the validity of the code.
-Merge to main: Once changes are merged into the main branch, the application is automatically deployed to Render, updating the production environment.
-# Setup
-Prerequisites
-A GitHub repository with the source code of the full-stack application.
-A Render account to deploy the application.
-GitHub Actions enabled for the repository.
-Steps for Setup
-1. Configure GitHub Actions
-The GitHub Actions CI/CD workflow is defined in the .github/workflows/ci.yml file. The workflow includes:
+ # Features
+CI Pipeline: Runs Cypress tests on pull requests to the develop branch.
+CD Pipeline: Automatically deploys the app to Render when the develop branch is merged into main.
 
-Cypress Test Job: Runs Cypress tests on Pull Requests to the develop branch.
-Deploy Job: Deploys the application to Render when changes are pushed to the main branch.
+# Table of Contents
+Project Setup
+Branching Strategy
+CI/CD Workflow
+GitHub Actions Configuration
+Deploy to Render
+Testing
+Contributing
 
-2. Set Up Cypress
-Make sure your project has Cypress installed for testing. You can add it with:
 
-bash
-Copy code
-npm install cypress --save-dev
-Also, configure Cypress by creating a cypress.json file if you don't have it already.
+# Branching Strategy
+Develop Branch
+All feature branches should be created from develop.
+Merge feature branches into develop via pull requests (PRs).
+Never merge directly into main.
 
-3. Set Up Render for Deployment
-Create a service on Render to host your application.
-Link your GitHub repository to Render and configure it to deploy from the main branch.
-Store the Render API key as a secret in your GitHub repository (under Settings > Secrets), named RENDER_API_KEY.
+Main Branch
+Once features are merged into develop, the code should be merged into main for deployment.
+Only the develop branch should be merged into main to ensure that the latest tested code is deployed.
 
-4. Environment Variables
-For Cypress tests and Render deployment, you might need to set up certain environment variables:
+# CI/CD Workflow
+This project uses GitHub Actions for Continuous Integration (CI) and Continuous Deployment (CD).
 
-CYPRESS_baseUrl: The base URL of your application (for testing purposes).
-RENDER_API_KEY: The API key for deploying to Render.
-Running the Workflow
-Once set up, the GitHub Actions workflow will automatically trigger on the following events:
+CI: Run Tests on PRs to develop
+Trigger: Whenever a pull request is made to the develop branch, GitHub Actions will run Cypress tests to ensure that the code is functioning as expected.
+Location of Workflow File: .github/workflows/test.yml
 
-Pull Request to develop: Runs the Cypress tests to validate the code.
-Push to main: Automatically deploys the application to Render.
-Deploying the Application
-The deployment process uses Render's CLI to deploy the latest code to your Render service. Ensure your Render service is set up to deploy from the main branch.
+Test Workflow Overview:
+Checkout the code.
+Install dependencies using npm install.
+Run the Cypress tests with npm run test:cypress.
 
-# Notes
-Cypress Tests: The test job will run Cypress tests for any changes made in the PR to ensure that the code doesn't break functionality. If tests fail, the PR cannot be merged.
-Deployment: After merging the PR into the main branch, the deploy job will trigger, and the app will be deployed to the Render environment automatically.
-# Troubleshooting
-Cypress Tests Fail: Review the Cypress test logs to understand the failure. You may need to adjust your application or test configuration.
-Deployment Fails: Check the deployment logs for errors related to the Render CLI or API key. Ensure that your service is correctly linked to your GitHub repository.
-# License
-This project is licensed under the MIT License - see the LICENSE file for details.
+# CD: Deploy to Render on Merge to main
+Trigger: When the develop branch is merged into main, GitHub Actions will automatically deploy the application to Render.
+Location of Workflow File: .github/workflows/deploy.yml
+
+Deploy Workflow Overview:
+Checkout the code.
+Install dependencies using npm install.
+Trigger a deployment to Render by making an API call to Render’s deployment API using the curl command.
+
+# Deployment Hook URL
+You need to configure Render’s deployment webhook by obtaining your Render Service's Deployment Hook URL.
+This URL is then used in the deploy.yml GitHub Actions workflow to trigger the deployment when code is merged into main.
+
+# GitHub Actions Configuration
+GitHub Actions are configured in two YAML files located in the .github/workflows/ directory.
+
+# Secrets Configuration
+To securely store the Render API key, you need to add it as a secret in your GitHub repository.
+
+Go to Settings > Secrets and Variables > Actions in your GitHub repository.
+Add a new secret named RENDER_API_KEY with your Render API key.
+
+# Deploy to Render
+Render is a platform where the application is automatically deployed when changes are merged into the main branch.
+
+Sign up for Render: If you haven't already, sign up for an account at Render.
+Create a Service: Set up a service for your app (e.g., Node.js, Static Web Service, etc.).
+Obtain Deployment Hook URL:
+After creating your service, find the Deployment Hook URL in the Render dashboard (under the settings for your service).
+Configure GitHub Secrets: Store the Render API Key in GitHub Secrets (RENDER_API_KEY).
+
+# Testing
+Cypress Tests
+The project uses Cypress for end-to-end testing. When you make a pull request to the develop branch, Cypress tests will run automatically.
+
+# Link
+
+
+# End of README
+This README.md file explains the project’s setup, the workflow, and how contributors should interact with the repository. It also provides detailed steps on configuring GitHub Actions and deploying to Render automatically.
