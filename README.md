@@ -75,5 +75,7 @@ The project uses Cypress for end-to-end testing. When you make a pull request to
 # Link
 
 
+
+
 # End of README
 This README.md file explains the project’s setup, the workflow, and how contributors should interact with the repository. It also provides detailed steps on configuring GitHub Actions and deploying to Render automatically.
